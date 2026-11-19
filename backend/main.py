@@ -227,6 +227,10 @@ def create_app(db_path=None, tool_runner=call_tool, logging_enabled=None):
             store.delete_logs(session_id)
         return Response(status_code=204)
 
+    @app.get('/api/share-config')
+    def share_config() -> dict[str, str]:
+        return {'kakao_js_key': setting('KAKAO_JS_KEY')}
+
     @app.get('/healthz', include_in_schema=False)
     def health():
         return {'status': 'ok'}

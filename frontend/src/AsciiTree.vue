@@ -3,10 +3,16 @@ import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { createSantaFlight } from './santaFlight'
 import { giftEffect, giftEffectSeconds, paintBurst, paintGiftFlash } from './sceneEffects'
 import { encoreSeconds, paintHolidayEncore } from './holidayEncore'
+import { createCampfire } from './campfireScene'
 
-const props = defineProps({ paused: Boolean, reducedMotion: Boolean, skipIntro: Boolean, snowTree: Boolean, terminal: Object })
+const props = defineProps({
+  paused: Boolean, reducedMotion: Boolean, skipIntro: Boolean, snowTree: Boolean, terminal: Object,
+})
+const emit = defineEmits(['light-campfire', 'stoke-campfire'])
 const canvas = ref(null)
 const treeGiftCanvas = ref(null)
+const campfireCanvas = ref(null)
+const campfireReady = ref(false)
 const field = ref(null)
 const encoreCanvas = ref(null)
 const santaCanvas = ref(null)
@@ -24,6 +30,9 @@ const ornamentsEnd = 4
 const starStart = 4.05
 const giftsStart = 4.5
 const introEnd = 5.2
+const treeFadeSeconds = 1.65
+const fireRevealSeconds = .6
+const fireFloor = 385
 const tilt = .08
 const tiltCos = Math.cos(tilt)
 const tiltSin = Math.sin(tilt)
@@ -162,6 +171,8 @@ const gifts = [
   { x: 78, z: 100, size: 40, tall: 34, color: '#c189c5', top: '#e5b4df', side: '#8a568f', ribbon: '#ffe1aa' },
   { x: -77, z: 97, size: 34, tall: 31, color: '#72b88e', top: '#9ed5a9', side: '#438466', ribbon: '#ffdb92' },
 ]
+// The stored gift indices differ from the left-to-right order on screen.
+const campfireGiftOrder = [0, 3, 1, 2]
 for (const [index, gift] of gifts.entries()) {
   const base = 174
   const half = gift.size / 2
@@ -262,6 +273,10 @@ const depths = new Float32Array(columns * rows)
 const characters = new Array(depths.length)
 let ctx
 let treeGiftContext
+let campfireContext
+let campfireStartedAt = null
+let giftStep = 0
+let campfire = createCampfire()
 let fieldContext
 let fieldWidth = 0
 let fieldHeight = 0
@@ -339,9 +354,24 @@ function projectTree() {
   }
 }
 
-function paintTree() {
+function eraseTree(context, fade) {
+  const band = 72
+  const edge = (height + band) * fade
+  const eraser = context.createLinearGradient(0, edge - band, 0, edge)
+  eraser.addColorStop(0, '#000')
+  eraser.addColorStop(1, '#0000')
+  context.save()
+  context.globalCompositeOperation = 'destination-out'
+  context.fillStyle = eraser
+  context.fillRect(0, 0, width, height)
+  context.restore()
+}
+
+function paintTree(fade) {
+  if (fade === 1 && campfireReady.value) return
   ctx.clearRect(0, 0, width, height)
   treeGiftContext.clearRect(0, 0, width, height)
+  if (fade >= 1) return
   treeGiftContext.font = 'bold 10px Consolas, monospace'
   if (elapsed > starStart) {
     ctx.globalAlpha = clamp((elapsed - starStart) / .3)
@@ -373,15 +403,31 @@ function paintTree() {
     ctx.restore()
     paintBurst(ctx, width / 2, 60, props.reducedMotion ? 24 : 15 + (1 - flash) * 50, flash, topper)
   }
+  treeGiftContext.globalAlpha = 1
+  if (fade > 0) {
+    if (props.reducedMotion) {
+      for (const context of [ctx, treeGiftContext]) {
+        context.save()
+        context.globalAlpha = fade
+        context.globalCompositeOperation = 'destination-out'
+        context.fillStyle = '#000'
+        context.fillRect(0, 0, width, height)
+        context.restore()
+      }
+    } else {
+      eraseTree(ctx, fade)
+      eraseTree(treeGiftContext, fade)
+    }
+  }
 }
 
-function paintField() {
+function paintField(fade) {
   if (!fieldContext || !fieldWidth || !fieldHeight) return
   fieldContext.clearRect(0, 0, fieldWidth, fieldHeight)
   fieldGiftHits.length = 0
   paintSkyStars()
   paintSnowBanks()
-  if (terminalBounds && elapsed > giftsStart) paintFieldGifts()
+  if (terminalBounds && elapsed > giftsStart && fade < 1) paintFieldGifts(fade)
   const area = fieldWidth * fieldHeight
   paintSnowfall(snow, Math.max(114, Math.round(area / 3350)), '#ccdeed')
   paintSnowfall(largeSnow, Math.max(12, Math.round(area / 47000)), '#e0f2ff')
@@ -523,10 +569,12 @@ function layoutFieldGifts() {
     .sort((a, b) => a.floor - b.floor)
 }
 
-function paintFieldGifts() {
+function paintFieldGifts(fade) {
   for (const [index, { x, floor, size, shape, id }] of fieldGiftPlacements.entries()) {
     const delay = .13 + index / fieldGiftPlacements.length * .37
-    const opacity = clamp((elapsed - giftsStart - delay) / .2)
+    const fadeAt = .5 + .24 * clamp(floor / fieldHeight)
+    const remaining = props.reducedMotion ? 1 - fade : 1 - clamp((fade - fadeAt) / .26)
+    const opacity = clamp((elapsed - giftsStart - delay) / .2) * remaining
     if (opacity > 0) paintGiftBox(x, floor, size, fieldGifts[shape], opacity, gifts.length + id)
   }
 }
@@ -593,8 +641,19 @@ function paintGiftBox(x, floor, size, gift, opacity, id) {
 }
 
 function paint() {
-  paintField()
-  paintTree()
+  const campfireTime = campfireStartedAt === null ? 0 : effectSeconds - campfireStartedAt
+  const fade = clamp(campfireTime / treeFadeSeconds)
+  paintField(fade)
+  paintTree(fade)
+  if (campfireStartedAt !== null) {
+    campfireContext.clearRect(0, 0, width, height)
+    const reveal = clamp((campfireTime - treeFadeSeconds) / fireRevealSeconds)
+    if (reveal > 0) {
+      campfireReady.value = true
+      campfire.paint(campfireContext, width / 2, fireFloor, elapsed, effectSeconds, reveal, props.reducedMotion)
+    }
+    return
+  }
   let encoreTime = null
   if (encoreStartedAt !== null) {
     const age = effectSeconds - encoreStartedAt
@@ -607,6 +666,12 @@ function paint() {
 
 function sceneTarget(event) {
   const fieldRect = field.value.getBoundingClientRect()
+  const rect = canvas.value.getBoundingClientRect()
+  const x = (event.clientX - rect.left) * width / rect.width
+  const y = (event.clientY - rect.top) * height / rect.height
+  if (campfireStartedAt !== null) {
+    return campfireReady.value && campfire.contains(x, y, width / 2, fireFloor) ? 'fire' : null
+  }
   const fieldX = event.clientX - fieldRect.left
   const fieldY = event.clientY - fieldRect.top
   if (santa?.contains(fieldX, fieldY)) return 'santa'
@@ -614,9 +679,6 @@ function sceneTarget(event) {
     fieldX >= left && fieldX <= right && fieldY >= top && fieldY <= bottom)
   if (box) return box.id
 
-  const rect = canvas.value.getBoundingClientRect()
-  const x = (event.clientX - rect.left) * width / rect.width
-  const y = (event.clientY - rect.top) * height / rect.height
   const column = Math.floor(x / cellWidth)
   const row = Math.floor(y / cellHeight)
   if (row < 0 || row >= rows || column < 0 || column >= columns) return null
@@ -636,7 +698,7 @@ function sceneTarget(event) {
 }
 
 function lightStar() {
-  if (elapsed <= starStart) return
+  if (campfireStartedAt !== null || elapsed <= starStart) return
   starClickedAt = effectSeconds
   if (encoreContext && encoreStartedAt === null && Math.random() < .01) {
     encoreStartedAt = effectSeconds
@@ -645,15 +707,56 @@ function lightStar() {
   playReaction()
 }
 
+function unlockCampfire(target) {
+  giftStep = target === campfireGiftOrder[giftStep] ? giftStep + 1 : 0
+  if (giftStep !== campfireGiftOrder.length || !campfireContext) return false
+
+  campfireStartedAt = effectSeconds
+  giftAnimations.clear()
+  encoreStartedAt = null
+  encoreContext?.clearRect(0, 0, fieldWidth, fieldHeight)
+  santaContext?.clearRect(0, 0, fieldWidth, santaSkyHeight)
+  emit('light-campfire', treeFadeSeconds)
+  return true
+}
+
+function stokeCampfire() {
+  campfire.stoke(effectSeconds)
+  emit('stoke-campfire')
+  playReaction()
+}
+
+function returnToTree() {
+  if (!campfireReady.value) return
+  campfireReady.value = false
+  campfireStartedAt = null
+  campfire = createCampfire()
+  giftStep = 0
+  starClickedAt = -Infinity
+  campfireContext.clearRect(0, 0, width, height)
+  playReaction()
+  canvas.value.focus({ preventScroll: true })
+}
+
+defineExpose({ campfireReady, returnToTree })
+
+function activateScene() {
+  if (campfireReady.value) stokeCampfire()
+  else lightStar()
+}
+
 function interact(event) {
   const target = sceneTarget(event)
-  if (target === 'tree') lightStar()
+  if (target === 'fire') stokeCampfire()
+  else if (target === 'tree') lightStar()
   else if (target === 'santa') {
     santa.react(flightSeconds, props.reducedMotion)
     playReaction()
   }
-  else if (target !== null && !giftAnimations.has(target)) {
-    giftAnimations.set(target, { start: effectSeconds, open: Math.random() < .2 })
+  else if (target !== null) {
+    if (!unlockCampfire(target) && !giftAnimations.has(target)) {
+      giftAnimations.set(target, { start: effectSeconds, open: Math.random() < .2 })
+    }
     playReaction()
   }
 }
@@ -692,6 +795,7 @@ function resizeScene() {
   fieldGiftPlacements = layoutFieldGifts()
   sizeCanvas(canvas.value, ctx, treeRect.width, treeRect.height, width, height)
   sizeCanvas(treeGiftCanvas.value, treeGiftContext, treeRect.width, treeRect.height, width, height)
+  if (campfireContext) sizeCanvas(campfireCanvas.value, campfireContext, treeRect.width, treeRect.height, width, height)
   sizeCanvas(field.value, fieldContext, fieldWidth, fieldHeight, fieldWidth, fieldHeight)
   if (encoreContext) sizeCanvas(encoreCanvas.value, encoreContext, fieldWidth, fieldHeight, fieldWidth, fieldHeight)
   snowBanks = makeSnowBanks()
@@ -731,7 +835,9 @@ function animate(now) {
 function shouldAnimate() {
   return visible && !document.hidden &&
     (!props.paused || encoreStartedAt !== null || giftAnimations.size ||
-      effectSeconds - starClickedAt < 1.05 || santa?.isReacting(flightSeconds))
+      effectSeconds - starClickedAt < 1.05 || santa?.isReacting(flightSeconds) ||
+      (campfireStartedAt !== null && (effectSeconds - campfireStartedAt <= treeFadeSeconds + fireRevealSeconds ||
+        campfire.isReacting(effectSeconds))))
 }
 
 function syncAnimation() {
@@ -744,6 +850,7 @@ function syncAnimation() {
 onMounted(() => {
   ctx = canvas.value.getContext('2d')
   treeGiftContext = treeGiftCanvas.value.getContext('2d')
+  campfireContext = campfireCanvas.value.getContext('2d')
   fieldContext = field.value.getContext('2d')
   if (!ctx || !treeGiftContext || !fieldContext) return
   encoreContext = encoreCanvas.value.getContext('2d')
@@ -789,9 +896,11 @@ onUnmounted(() => {
     @pointermove="$event.currentTarget.style.cursor = sceneTarget($event) === null ? '' : 'pointer'">
     <canvas ref="field" class="winter-field" aria-hidden="true" />
     <canvas ref="canvas" class="ascii-tree" :class="{ 'snow-tree': snowTree }" width="840" height="490"
-      role="button" tabindex="0" :aria-label="snowTree ? 'ASCII 눈꽃 트리의 별 밝히기' : 'ASCII 크리스마스트리의 별 밝히기'"
-      @keydown.enter.prevent="lightStar" @keydown.space.prevent="lightStar" />
+      role="button" tabindex="0"
+      :aria-label="campfireReady ? '모닥불에 불 지피기' : snowTree ? 'ASCII 눈꽃 트리의 별 밝히기' : 'ASCII 크리스마스트리의 별 밝히기'"
+      @keydown.enter.prevent="activateScene" @keydown.space.prevent="activateScene" />
     <canvas ref="treeGiftCanvas" class="tree-gifts" width="840" height="490" aria-hidden="true" />
+    <canvas ref="campfireCanvas" class="campfire-scene" width="840" height="490" aria-hidden="true" />
     <canvas ref="encoreCanvas" class="holiday-encore" aria-hidden="true" />
     <canvas ref="santaCanvas" class="santa-sky" aria-hidden="true" />
   </div>

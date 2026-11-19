@@ -62,12 +62,14 @@ def verify(url, output):
         expect(page.get_by_role('button', name='초대장이 도착했어요 봉투 열기')).to_be_visible(timeout=15000)
         page.get_by_role('button', name='초대장이 도착했어요 봉투 열기').click()
         expect(page.get_by_role('dialog', name='크리스마스 초대장')).to_be_visible()
+        expect(page.locator('.arrival-envelope')).to_be_hidden()
         expect(page.get_by_role('img', name='방문 순서와 경로를 좌표에 표시한 지도')).to_be_visible()
         expect(page.get_by_role('heading', name='오늘의 음악')).to_be_visible()
         page.get_by_role('dialog').screenshot(path=output / '02-invitation.png', animations='disabled')
         button('초대장 저장').click()
         expect(page.get_by_text('초대장 보관함에 넣었어요.')).to_be_visible()
         button('닫기').click()
+        expect(page.locator('.arrival-envelope')).to_be_visible()
 
         send('같은 조건에서 도보는 10분 이내로 바꿔 줘.')
         page.get_by_role('button', name='초대장이 도착했어요 봉투 열기').click(timeout=15000)
@@ -115,6 +117,38 @@ def verify(url, output):
         assert mobile.evaluate('document.documentElement.scrollWidth <= window.innerWidth')
         mobile.screenshot(path=output / '07-mobile.png', full_page=True, animations='disabled')
 
+        saved_plans = requests.get(url + '/api/plans', timeout=5).json()
+        shared_url = url + '/?invite=' + saved_plans[0]['id']
+        for recipient, image in ((page, '09-received-invitation'), (mobile, '10-received-mobile')):
+            recipient.goto(shared_url)
+            received = recipient.get_by_role('dialog', name='받은 크리스마스 초대장')
+            expect(received).to_be_visible()
+            expect(recipient.locator('.arrival-envelope')).to_have_count(0)
+            expect(received.locator('.letter h2')).to_be_visible()
+            backdrop = received.evaluate("dialog => getComputedStyle(dialog, '::backdrop').backgroundColor")
+            assert backdrop == 'rgba(0, 0, 0, 0.5)'
+            expect(recipient.locator('.chat-stage .chat-panel')).to_be_visible()
+            expect(recipient.locator('.topbar nav')).to_be_visible()
+            tree = recipient.locator('.chat-stage .ascii-tree')
+            expect(tree).to_be_visible()
+            recipient.wait_for_function("""() => {
+                const tree = document.querySelector('.chat-stage .ascii-tree');
+                const pixels = tree.getContext('2d').getImageData(0, 0, tree.width, tree.height).data;
+                return pixels.some((value, index) => index % 4 === 3 && value > 200);
+            }""")
+            expect(received.get_by_role('button', name='일정 수정')).to_have_count(0)
+            recipient.screenshot(path=output / f'{image}.png', animations='disabled')
+            close = received.get_by_role('button', name='닫기', exact=True)
+            close.focus()
+            assert close.evaluate('button => getComputedStyle(button).outlineStyle') == 'none'
+            close.click()
+            expect(received).to_be_hidden()
+            expect(recipient.locator('.arrival-envelope')).to_have_count(0)
+            expect(recipient.get_by_role('heading', name='메리와 대화')).to_be_visible()
+            composer = recipient.get_by_role('textbox', name='크리스마스 계획 메시지')
+            composer.fill('강남역에서 크리스마스 보내기')
+            expect(composer).to_have_value('강남역에서 크리스마스 보내기')
+
         page.goto(url)
         page.route('**/api/chat/*', lambda route: (sleep(.5), route.continue_()))
         send('크리스마스에 종로에서 14:00부터 18:00까지 전시와 카페를 가고 싶어.')
@@ -142,4 +176,4 @@ if __name__ == '__main__':
         finally:
             process.terminate()
             process.wait(timeout=10)
-    print('PASS: Chrome-compatible Edge desktop/mobile, chat, invitation, overlaps, editing, deletion, logs, Swagger.')
+    print('PASS: Edge desktop/mobile, chat, saved/shared invitations, overlaps, editing, deletion, logs, Swagger.')

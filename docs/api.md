@@ -15,9 +15,13 @@
 | GET /api/logs/{session_id} | session_id | 200 session_id, events. 발생 순서로 반환 |
 | DELETE /api/logs/{session_id} | session_id | 204 |
 | GET /api/tools | 없음 | 200 등록 Tool 설명, 출처, 입출력 스키마 |
+| GET /api/share-config | 없음 | 200 `kakao_js_key`. 카카오 공유 SDK의 공개 JavaScript 키로, 미설정 시 빈 문자열 |
+| GET /healthz | 없음 | 200 `{"status":"ok"}` |
 
 겹치는 시간은 예약한 사용자 입력 구간으로 판단합니다. 시작이 다른 계획의 종료와 정확히 일치하면 겹치지 않습니다. 겹쳐도 저장되며 응답에서 겹친 계획을 알 수 있습니다.
 
 이벤트 필드는 event_id, session_id, run_id, sequence, timestamp, event_type, stage, tool_name, sanitized_input, sanitized_output, duration_ms, decision, reason, error_code입니다. 조회·삭제로 관리합니다.
 
 오류 형식은 `{detail}`입니다. 404는 없는 리소스, 409는 실행 중인 세션 또는 모드 충돌, 422는 입력 오류, 503은 동시 처리 제한입니다.
+
+공유 URL `/?invite={plan_id}`는 저장 초대장 상세를 불러와 메인 화면 위의 읽기 전용 편지 모달에 표시합니다. 해당 초대장이 삭제되거나 보관함이 초기화되면 열람할 수 없습니다. 편지 모달에는 편집·삭제 버튼이 없으며, API는 시연 환경의 단일 인스턴스를 기준으로 합니다.

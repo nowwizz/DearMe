@@ -3,6 +3,7 @@ import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { api, formatClock, formatEndClock, formatStamp } from './api'
 import EventList from './EventList.vue'
 import Invitation from './Invitation.vue'
+import InvitationShare from './InvitationShare.vue'
 import AsciiTree from './AsciiTree.vue'
 import BackgroundMusic from './BackgroundMusic.vue'
 import TerminalBar from './TerminalBar.vue'
@@ -10,7 +11,12 @@ import TerminalBar from './TerminalBar.vue'
 const assistantName = '메리'
 const opening = { role: 'assistant', text: '안녕! 나는 크리스마스 코스를 추천해주는 메리야. 크리스마스에 어느 역 근처에서 뭘 하고 싶어?' }
 const tabs = [{ id: 'chat', title: '대화하기' }, { id: 'archive', title: '초대장 보관함' }, { id: 'logs', title: '실행 기록' }]
+const sharedId = new URLSearchParams(window.location.search).get('invite')
 const current = ref('chat')
+const sharedPlan = ref(null)
+const sharedError = ref('')
+const sharedDialog = ref(null)
+const mainPage = ref(null)
 const mode = ref('live')
 const messages = ref([opening])
 const conditions = ref({})
@@ -37,10 +43,12 @@ const error = ref('')
 const scrollLog = ref(null)
 const terminal = ref(null)
 const input = ref(null)
+const scene = ref(null)
+const sceneAudio = ref(null)
 const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)')
 const motionReduced = ref(motionPreference.matches)
 const scenePaused = ref(motionReduced.value)
-const skipTreeIntro = ref(false)
+const skipTreeIntro = ref(Boolean(sharedId))
 const snowTree = Math.random() < .05
 const syncMotionPreference = event => {
   motionReduced.value = event.matches
@@ -150,6 +158,11 @@ function usePrompt(request) {
   input.value?.focus()
 }
 
+function returnToTree() {
+  scene.value?.returnToTree()
+  sceneAudio.value?.returnToTree()
+}
+
 async function go(tab, planId) {
   if (current.value === 'chat' && tab !== 'chat') skipTreeIntro.value = true
   current.value = tab
@@ -202,6 +215,15 @@ async function openSaved(id) {
   } catch (ex) { error.value = ex.message }
 }
 
+async function openSharedInvitation() {
+  try {
+    const row = await api('/plans/' + encodeURIComponent(sharedId))
+    sharedPlan.value = row.plan
+  } catch {
+    sharedError.value = '이 초대장을 열 수 없어요. 보낸 사람에게 링크를 다시 받아 주세요.'
+  }
+}
+
 function editPlan() {
   const row = saved.value
   editing.value = { title: row.title, date: row.date, start: formatClock(row.start), end: formatClock(row.end),
@@ -248,8 +270,12 @@ async function confirmDelete() {
 }
 
 onMounted(() => {
-  document.querySelector('main')?.focus({ preventScroll: true })
+  mainPage.value?.focus({ preventScroll: true })
   motionPreference.addEventListener('change', syncMotionPreference)
+  if (sharedId) {
+    sharedDialog.value?.showModal()
+    openSharedInvitation()
+  }
 })
 onUnmounted(() => motionPreference.removeEventListener('change', syncMotionPreference))
 </script>
@@ -265,12 +291,17 @@ onUnmounted(() => motionPreference.removeEventListener('change', syncMotionPrefe
     </nav>
   </header>
 
-  <main :class="current === 'chat' ? 'chat-page' : 'library-page'" tabindex="-1">
+  <main ref="mainPage" :class="current === 'chat' ? 'chat-page' : 'library-page'" tabindex="-1">
     <template v-if="current === 'chat'">
       <div class="chat-stage">
-        <AsciiTree :paused="scenePaused" :reduced-motion="motionReduced" :skip-intro="skipTreeIntro"
-          :snow-tree="snowTree" :terminal="terminal" />
-        <BackgroundMusic />
+        <AsciiTree ref="scene" :paused="scenePaused" :reduced-motion="motionReduced" :skip-intro="skipTreeIntro"
+          :snow-tree="snowTree" :terminal="terminal" @light-campfire="sceneAudio?.lightCampfire($event)"
+          @stoke-campfire="sceneAudio?.stokeCampfire()" />
+        <BackgroundMusic ref="sceneAudio" />
+        <button v-if="scene?.campfireReady" class="tree-return" type="button" aria-label="트리로 돌아가기"
+          title="트리로 돌아가기" @click="returnToTree">
+          <span class="tree-return-icon" aria-hidden="true"></span>
+        </button>
         <button class="scene-toggle" type="button" :aria-label="scenePaused ? '애니메이션 재생' : '애니메이션 일시정지'"
           :title="scenePaused ? '애니메이션 재생' : '애니메이션 일시정지'" @click="scenePaused = !scenePaused">
           <span class="scene-icon" :class="{ play: scenePaused }" aria-hidden="true"></span>
@@ -333,9 +364,9 @@ onUnmounted(() => motionPreference.removeEventListener('change', syncMotionPrefe
         aria-labelledby="invitation-dialog-title">
         <div class="invitation-toolbar">
           <TerminalBar>
-            <h2 id="invitation-dialog-title">크리스마스 초대장</h2>
+            <h2 id="invitation-dialog-title" tabindex="-1" autofocus>크리스마스 초대장</h2>
             <template #actions>
-              <button class="quiet dialog-close" type="button" autofocus @click="invitationDialog?.close()">닫기</button>
+              <button class="quiet dialog-close" type="button" @click="invitationDialog?.close()">닫기</button>
             </template>
           </TerminalBar>
           <div class="dialog-save-bar">
@@ -347,6 +378,7 @@ onUnmounted(() => motionPreference.removeEventListener('change', syncMotionPrefe
               {{ savingRun !== null && savingRun === runId ? '저장 중…' : '초대장 저장' }}
             </button>
           </div>
+          <div v-if="savedDraft" class="share-bar"><InvitationShare :entry="savedDraft" /></div>
         </div>
         <Invitation :plan="invitation" :overlaps="savedDraft?.overlaps" />
       </dialog>
@@ -382,7 +414,9 @@ onUnmounted(() => motionPreference.removeEventListener('change', syncMotionPrefe
           </fieldset>
           <div class="actions"><button class="button primary">변경 저장</button><button type="button" class="button outline" @click="editing = null">취소</button></div>
         </form>
-        <Invitation v-else-if="saved" :key="saved.id" :plan="saved.plan" :overlaps="overlap" saved @edit="editPlan" @remove="confirmation = 'plan'" />
+        <Invitation v-else-if="saved" :key="saved.id" :plan="saved.plan" :overlaps="overlap" saved @edit="editPlan" @remove="confirmation = 'plan'">
+          <template #share><InvitationShare :entry="saved" /></template>
+        </Invitation>
         <p v-else-if="archive.length" class="library-instruction">열어 볼 초대장을 선택해 주세요.</p>
       </div>
       <div v-else class="subgrid" :class="{ 'has-records': logSessions.length }">
@@ -402,6 +436,20 @@ onUnmounted(() => motionPreference.removeEventListener('change', syncMotionPrefe
         <p v-else-if="logSessions.length" class="library-instruction">확인할 대화를 선택해 주세요.</p>
       </div>
     </section>
+
+    <dialog v-if="sharedId" ref="sharedDialog" id="received-dialog" class="terminal-window terminal-library invitation-dialog received-dialog"
+      aria-labelledby="received-title" @close="mainPage?.focus({ preventScroll: true })">
+      <div class="invitation-toolbar">
+        <TerminalBar>
+          <h2 id="received-title" tabindex="-1" autofocus>받은 크리스마스 초대장</h2>
+          <template #actions>
+            <button class="quiet dialog-close" type="button" @click="sharedDialog?.close()">닫기</button>
+          </template>
+        </TerminalBar>
+      </div>
+      <Invitation v-if="sharedPlan" :plan="sharedPlan" />
+      <p v-else class="library-instruction" role="status">{{ sharedError || '초대장을 불러오는 중…' }}</p>
+    </dialog>
 
     <div v-if="feedback || error || confirmation" class="feedback-stack" aria-live="polite">
       <p v-if="feedback" class="notice">{{ feedback }}</p>

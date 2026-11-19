@@ -27,6 +27,7 @@ function recoverPhoto(photo) {
       </div>
       <small v-if="plan.mode === 'demo'" class="demo-note">시연용 초대장</small>
     </div>
+    <div v-if="$slots.share" class="share-bar"><slot name="share" /></div>
     <div v-if="overlaps?.length" class="notice" role="status">
       <strong>시간이 겹치는 초대장</strong>
       <ul class="notes">
