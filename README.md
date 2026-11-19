@@ -90,7 +90,7 @@ docker run --rm --env-file .env --env DATABASE_PATH=/data/dear-me.sqlite3 --env 
 
 LLM 요청은 `GMS_BASE_URL`에 `/responses`를 붙인 주소로 전송합니다.
 
-카카오톡으로 보내려면 카카오디벨로퍼스 앱의 **JavaScript SDK 도메인**과 **제품 링크 관리 → 웹 도메인**에 서비스의 공개 HTTPS 주소를 등록합니다. 같은 서비스의 환경에 `KAKAO_JS_KEY`를 설정한 뒤, 초대장을 저장하고 **카카오톡 공유**를 누릅니다. 공유 이미지에는 `frontend/public/invitation-share.png`를 사용합니다. 공유 링크의 열람 가능 기간은 보관함에 초대장이 남아 있는 기간과 같습니다. [카카오톡 공유 설정 안내](https://developers.kakao.com/docs/ko/tutorial/js-share)
+카카오톡으로 보내려면 카카오디벨로퍼스 앱의 **JavaScript SDK 도메인**과 **제품 링크 관리 → 웹 도메인**에 서비스의 공개 HTTPS 주소를 등록합니다. 같은 서비스의 환경에 `KAKAO_JS_KEY`를 설정한 뒤, 초대장을 저장하고 **카카오톡 공유**를 누릅니다. 공유 이미지에는 `kakaoImage2.png` 원본을 `frontend/public/invitation-share-v2.png`로 제공합니다. 공유 링크의 열람 가능 기간은 보관함에 초대장이 남아 있는 기간과 같습니다. [카카오톡 공유 설정 안내](https://developers.kakao.com/docs/ko/tutorial/js-share)
 
 `.venv/Scripts/python.exe scripts/verify_apis.py`로 실호출을 확인합니다. 이전 검증 결과와 공급자별 신청 절차는 [기획 검증](docs/domain-verification.md)에 있습니다. [공공데이터포털](https://www.data.go.kr/data/15101578/openapi.do) · [SK open API](https://openapi.sk.com/products/detail?linkMenuSeq=24) · [SSAFY GMS](https://gms.ssafy.io/web/)
 

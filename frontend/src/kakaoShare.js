@@ -48,7 +48,7 @@ export function sendKakaoInvitation(share, { id, title, date }) {
     content: {
       title,
       description: [date, 'Dear. Me 크리스마스 초대장'].filter(Boolean).join(' · '),
-      imageUrl: new URL('/invitation-share.png', url).href,
+      imageUrl: new URL('/invitation-share-v2.png', url).href,
       link,
     },
     buttons: [{ title: '초대장 열기', link }],
