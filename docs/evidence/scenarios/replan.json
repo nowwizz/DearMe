@@ -1,0 +1,997 @@
+{
+  "prompt": "크리스마스에 종로에서 오후 2시부터 6시까지 혼자 조용한 전시와 카페에 가고 싶어. 도보는 10분 이내, 재즈가 좋아.",
+  "elapsed_ms": 594,
+  "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+  "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+  "status": "complete",
+  "events": [
+    {
+      "event_id": "9084f00b-dfcd-4e4a-b9de-68ad15f8d5bd",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 1,
+      "timestamp": "2026-11-18T03:42:47.939+00:00",
+      "event_type": "stage_started",
+      "stage": "analysis",
+      "tool_name": null,
+      "sanitized_input": null,
+      "sanitized_output": null,
+      "duration_ms": null,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "05ff5bbe-38aa-47d3-8eb7-f579dfedc283",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 2,
+      "timestamp": "2026-11-18T03:42:47.953+00:00",
+      "event_type": "decision_made",
+      "stage": "analysis",
+      "tool_name": null,
+      "sanitized_input": null,
+      "sanitized_output": {
+        "changed_fields": [
+          "activities",
+          "companion",
+          "date",
+          "end",
+          "mood",
+          "music",
+          "party_size",
+          "region",
+          "start",
+          "walking_limit"
+        ]
+      },
+      "duration_ms": null,
+      "decision": "plan",
+      "reason": "규칙 · schedule_request",
+      "error_code": null
+    },
+    {
+      "event_id": "bde8b735-52a8-48cc-bc3d-7d91d8bbd86b",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 3,
+      "timestamp": "2026-11-18T03:42:47.969+00:00",
+      "event_type": "stage_finished",
+      "stage": "analysis",
+      "tool_name": null,
+      "sanitized_input": null,
+      "sanitized_output": null,
+      "duration_ms": 15,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "f84ae208-1a93-4334-ae29-aee3df07fe6c",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 4,
+      "timestamp": "2026-11-18T03:42:47.982+00:00",
+      "event_type": "stage_started",
+      "stage": "plan",
+      "tool_name": null,
+      "sanitized_input": null,
+      "sanitized_output": null,
+      "duration_ms": null,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "0ac060bb-5114-4096-b0e6-4cd19dfdcd6e",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 5,
+      "timestamp": "2026-11-18T03:42:47.997+00:00",
+      "event_type": "decision_made",
+      "stage": "plan",
+      "tool_name": null,
+      "sanitized_input": null,
+      "sanitized_output": {
+        "steps": [
+          {
+            "tool": "search_places",
+            "uses": "지역 · 활동 · 날짜"
+          },
+          {
+            "tool": "get_place_details",
+            "uses": "후보 식별자와 유형"
+          },
+          {
+            "tool": "get_walking_route",
+            "uses": "출발지와 선택한 후보의 좌표"
+          },
+          {
+            "tool": "get_christmas_weather",
+            "uses": "첫 장소의 좌표와 활동 시각"
+          }
+        ],
+        "chosen_by": "rules"
+      },
+      "duration_ms": null,
+      "decision": "work_plan",
+      "reason": "후보 식별자와 좌표를 확보한 뒤 상세와 경로에 연결해요.",
+      "error_code": null
+    },
+    {
+      "event_id": "894ba240-2627-459a-aaa1-f29771dd0859",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 6,
+      "timestamp": "2026-11-18T03:42:48.006+00:00",
+      "event_type": "stage_finished",
+      "stage": "plan",
+      "tool_name": null,
+      "sanitized_input": null,
+      "sanitized_output": null,
+      "duration_ms": 15,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "19bf3689-185a-4fa4-960d-574ea38e4315",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 7,
+      "timestamp": "2026-11-18T03:42:48.026+00:00",
+      "event_type": "stage_started",
+      "stage": "execute",
+      "tool_name": null,
+      "sanitized_input": null,
+      "sanitized_output": null,
+      "duration_ms": null,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "f2b7940a-b33a-4f40-8eda-5c0438b49fc6",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 8,
+      "timestamp": "2026-11-18T03:42:48.039+00:00",
+      "event_type": "tool_requested",
+      "stage": "execute",
+      "tool_name": "search_places",
+      "sanitized_input": {
+        "call_id": 8,
+        "category": 14,
+        "page": 1,
+        "uses_keyword": false
+      },
+      "sanitized_output": null,
+      "duration_ms": null,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "6811b69e-f8b2-41f7-ad18-147a1bf2043b",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 9,
+      "timestamp": "2026-11-18T03:42:48.055+00:00",
+      "event_type": "tool_requested",
+      "stage": "execute",
+      "tool_name": "search_places",
+      "sanitized_input": {
+        "call_id": 9,
+        "category": 39,
+        "page": 1,
+        "uses_keyword": false
+      },
+      "sanitized_output": null,
+      "duration_ms": null,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "28468fc2-a150-4b38-bea5-b91c5804763f",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 10,
+      "timestamp": "2026-11-18T03:42:48.068+00:00",
+      "event_type": "tool_completed",
+      "stage": "execute",
+      "tool_name": "search_places",
+      "sanitized_input": null,
+      "sanitized_output": {
+        "call_id": 8,
+        "ok": true,
+        "source": "로컬 검증용 데이터",
+        "candidate_ids": [
+          "101",
+          "104"
+        ]
+      },
+      "duration_ms": 0,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "949c03a7-c162-46d0-816a-b8042c7a8b75",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 11,
+      "timestamp": "2026-11-18T03:42:48.082+00:00",
+      "event_type": "tool_completed",
+      "stage": "execute",
+      "tool_name": "search_places",
+      "sanitized_input": null,
+      "sanitized_output": {
+        "call_id": 9,
+        "ok": true,
+        "source": "로컬 검증용 데이터",
+        "candidate_ids": [
+          "102",
+          "103"
+        ]
+      },
+      "duration_ms": 0,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "4fa1d2b5-c926-499c-a190-ee696489e380",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 12,
+      "timestamp": "2026-11-18T03:42:48.096+00:00",
+      "event_type": "tool_requested",
+      "stage": "execute",
+      "tool_name": "get_place_details",
+      "sanitized_input": {
+        "call_id": 12,
+        "candidate_id": "101",
+        "category": 14
+      },
+      "sanitized_output": null,
+      "duration_ms": null,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "42218603-0bc6-462e-9576-c826c7c9162f",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 13,
+      "timestamp": "2026-11-18T03:42:48.105+00:00",
+      "event_type": "tool_requested",
+      "stage": "execute",
+      "tool_name": "get_place_details",
+      "sanitized_input": {
+        "call_id": 13,
+        "candidate_id": "104",
+        "category": 14
+      },
+      "sanitized_output": null,
+      "duration_ms": null,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "45e11c10-c140-495c-bad5-256f1ecbfcd0",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 14,
+      "timestamp": "2026-11-18T03:42:48.124+00:00",
+      "event_type": "tool_requested",
+      "stage": "execute",
+      "tool_name": "get_place_details",
+      "sanitized_input": {
+        "call_id": 14,
+        "candidate_id": "102",
+        "category": 39
+      },
+      "sanitized_output": null,
+      "duration_ms": null,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "0e9e422b-fbc3-4f0f-a51d-1d71b311d126",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 15,
+      "timestamp": "2026-11-18T03:42:48.137+00:00",
+      "event_type": "tool_requested",
+      "stage": "execute",
+      "tool_name": "get_place_details",
+      "sanitized_input": {
+        "call_id": 15,
+        "candidate_id": "103",
+        "category": 39
+      },
+      "sanitized_output": null,
+      "duration_ms": null,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "fc9024f6-64b0-49cc-9d0b-22421a5d9c83",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 16,
+      "timestamp": "2026-11-18T03:42:48.138+00:00",
+      "event_type": "tool_completed",
+      "stage": "execute",
+      "tool_name": "get_place_details",
+      "sanitized_input": null,
+      "sanitized_output": {
+        "call_id": 14,
+        "ok": true,
+        "source": "로컬 검증용 데이터",
+        "candidate_id": "102",
+        "missing": [
+          "admission"
+        ]
+      },
+      "duration_ms": 0,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "5efedefe-8324-447a-b245-c9290262bec8",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 17,
+      "timestamp": "2026-11-18T03:42:48.163+00:00",
+      "event_type": "tool_completed",
+      "stage": "execute",
+      "tool_name": "get_place_details",
+      "sanitized_input": null,
+      "sanitized_output": {
+        "call_id": 13,
+        "ok": true,
+        "source": "로컬 검증용 데이터",
+        "candidate_id": "104",
+        "missing": []
+      },
+      "duration_ms": 0,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "9c51624c-84a8-4082-b5c0-276a48f01226",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 18,
+      "timestamp": "2026-11-18T03:42:48.174+00:00",
+      "event_type": "tool_completed",
+      "stage": "execute",
+      "tool_name": "get_place_details",
+      "sanitized_input": null,
+      "sanitized_output": {
+        "call_id": 12,
+        "ok": true,
+        "source": "로컬 검증용 데이터",
+        "candidate_id": "101",
+        "missing": []
+      },
+      "duration_ms": 0,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "be4c3c75-c7d3-4726-898e-63d6ec70e599",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 19,
+      "timestamp": "2026-11-18T03:42:48.191+00:00",
+      "event_type": "tool_completed",
+      "stage": "execute",
+      "tool_name": "get_place_details",
+      "sanitized_input": null,
+      "sanitized_output": {
+        "call_id": 15,
+        "ok": true,
+        "source": "로컬 검증용 데이터",
+        "candidate_id": "103",
+        "missing": [
+          "admission"
+        ]
+      },
+      "duration_ms": 0,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "dd3dca1b-eb75-46d4-92d3-c6f6d927a76c",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 20,
+      "timestamp": "2026-11-18T03:42:48.232+00:00",
+      "event_type": "tool_requested",
+      "stage": "execute",
+      "tool_name": "get_christmas_weather",
+      "sanitized_input": {
+        "call_id": 20,
+        "start_hour": 14,
+        "end_hour": 18,
+        "years": 5
+      },
+      "sanitized_output": null,
+      "duration_ms": null,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "69f6e702-3e02-484f-84bd-dcd4c55a823e",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 21,
+      "timestamp": "2026-11-18T03:42:48.244+00:00",
+      "event_type": "tool_completed",
+      "stage": "execute",
+      "tool_name": "get_christmas_weather",
+      "sanitized_input": null,
+      "sanitized_output": {
+        "call_id": 20,
+        "ok": true,
+        "source": "로컬 검증용 데이터",
+        "years": [
+          2021,
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "missing": {}
+      },
+      "duration_ms": 0,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "adac26ce-1755-4822-8fd5-a3de78fa6418",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 22,
+      "timestamp": "2026-11-18T03:42:48.261+00:00",
+      "event_type": "tool_requested",
+      "stage": "execute",
+      "tool_name": "get_walking_route",
+      "sanitized_input": {
+        "call_id": 22,
+        "coordinate_pair_available": true
+      },
+      "sanitized_output": null,
+      "duration_ms": null,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "172ef510-44c7-434f-bcee-d0e0c90084b4",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 23,
+      "timestamp": "2026-11-18T03:42:48.273+00:00",
+      "event_type": "tool_completed",
+      "stage": "execute",
+      "tool_name": "get_walking_route",
+      "sanitized_input": null,
+      "sanitized_output": {
+        "call_id": 22,
+        "ok": true,
+        "source": "로컬 검증용 데이터",
+        "has_route": true
+      },
+      "duration_ms": 0,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "f11318f1-a2dd-4f75-af29-fda97785037b",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 24,
+      "timestamp": "2026-11-18T03:42:48.289+00:00",
+      "event_type": "stage_finished",
+      "stage": "execute",
+      "tool_name": null,
+      "sanitized_input": null,
+      "sanitized_output": null,
+      "duration_ms": 250,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "a624b696-c750-4c69-b29c-0240a6a3c31a",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 25,
+      "timestamp": "2026-11-18T03:42:48.301+00:00",
+      "event_type": "stage_started",
+      "stage": "judge",
+      "tool_name": null,
+      "sanitized_input": null,
+      "sanitized_output": null,
+      "duration_ms": null,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "14492a35-cfd3-4f6f-938a-292a5073ff98",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 26,
+      "timestamp": "2026-11-18T03:42:48.304+00:00",
+      "event_type": "decision_made",
+      "stage": "judge",
+      "tool_name": null,
+      "sanitized_input": null,
+      "sanitized_output": {
+        "attempt": 0,
+        "reason_codes": [
+          "WALKING_LIMIT"
+        ],
+        "candidate_ids": [
+          "101",
+          "102"
+        ]
+      },
+      "duration_ms": null,
+      "decision": "rejected",
+      "reason": "후보 부족, 경로 확인 실패 또는 사용자 제약 불충족으로 대안을 검토했어요.",
+      "error_code": null
+    },
+    {
+      "event_id": "ab75a98b-401b-44d3-a276-61c0122c2f99",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 27,
+      "timestamp": "2026-11-18T03:42:48.328+00:00",
+      "event_type": "stage_finished",
+      "stage": "judge",
+      "tool_name": null,
+      "sanitized_input": null,
+      "sanitized_output": null,
+      "duration_ms": 16,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "b44b3a93-786b-4be5-a309-e6523a0c54be",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 28,
+      "timestamp": "2026-11-18T03:42:48.341+00:00",
+      "event_type": "stage_started",
+      "stage": "replan",
+      "tool_name": null,
+      "sanitized_input": null,
+      "sanitized_output": null,
+      "duration_ms": null,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "b9d32e97-b67d-43a2-bd64-394dbc7521dc",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 29,
+      "timestamp": "2026-11-18T03:42:48.355+00:00",
+      "event_type": "replan_requested",
+      "stage": "replan",
+      "tool_name": null,
+      "sanitized_input": null,
+      "sanitized_output": {
+        "strategy": "조회한 후보 순서 변경"
+      },
+      "duration_ms": null,
+      "decision": "1",
+      "reason": "기존 조회 결과 재사용 · 조회한 후보 순서 변경",
+      "error_code": null
+    },
+    {
+      "event_id": "9cec21c6-93d3-4a29-bb69-8d205746d329",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 30,
+      "timestamp": "2026-11-18T03:42:48.369+00:00",
+      "event_type": "stage_finished",
+      "stage": "replan",
+      "tool_name": null,
+      "sanitized_input": null,
+      "sanitized_output": null,
+      "duration_ms": 16,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "5aa4cf15-6985-4d9c-b65e-f9eda885e61f",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 31,
+      "timestamp": "2026-11-18T03:42:48.379+00:00",
+      "event_type": "stage_started",
+      "stage": "execute",
+      "tool_name": null,
+      "sanitized_input": null,
+      "sanitized_output": null,
+      "duration_ms": null,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "7f0274cf-3954-4d46-b08b-cc0a4a461bfd",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 32,
+      "timestamp": "2026-11-18T03:42:48.396+00:00",
+      "event_type": "tool_requested",
+      "stage": "execute",
+      "tool_name": "get_walking_route",
+      "sanitized_input": {
+        "call_id": 32,
+        "coordinate_pair_available": true
+      },
+      "sanitized_output": null,
+      "duration_ms": null,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "8f5e9f0c-5c88-4c84-ac67-fa7dac25e8ce",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 33,
+      "timestamp": "2026-11-18T03:42:48.406+00:00",
+      "event_type": "tool_completed",
+      "stage": "execute",
+      "tool_name": "get_walking_route",
+      "sanitized_input": null,
+      "sanitized_output": {
+        "call_id": 32,
+        "ok": true,
+        "source": "로컬 검증용 데이터",
+        "has_route": true
+      },
+      "duration_ms": 0,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "9189433e-51d2-4c81-bfb3-d5edca823f46",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 34,
+      "timestamp": "2026-11-18T03:42:48.422+00:00",
+      "event_type": "stage_finished",
+      "stage": "execute",
+      "tool_name": null,
+      "sanitized_input": null,
+      "sanitized_output": null,
+      "duration_ms": 32,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "8f4379d8-4f17-4c64-ab10-96363325c513",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 35,
+      "timestamp": "2026-11-18T03:42:48.435+00:00",
+      "event_type": "stage_started",
+      "stage": "judge",
+      "tool_name": null,
+      "sanitized_input": null,
+      "sanitized_output": null,
+      "duration_ms": null,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "a33ce266-a99b-4bf8-bb68-745b101fbb74",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 36,
+      "timestamp": "2026-11-18T03:42:48.437+00:00",
+      "event_type": "decision_made",
+      "stage": "judge",
+      "tool_name": null,
+      "sanitized_input": null,
+      "sanitized_output": {
+        "checks": [
+          "종료 시각",
+          "보행",
+          "이용 조건",
+          "비용",
+          "추운 날 대안"
+        ],
+        "stop_count": 2
+      },
+      "duration_ms": null,
+      "decision": "accepted",
+      "reason": "보행과 종료 시각을 계산하고 이용 및 비용 근거를 확인했어요.",
+      "error_code": null
+    },
+    {
+      "event_id": "3f3c76af-a788-4765-ba1f-c2ad9ce9329f",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 37,
+      "timestamp": "2026-11-18T03:42:48.463+00:00",
+      "event_type": "stage_finished",
+      "stage": "judge",
+      "tool_name": null,
+      "sanitized_input": null,
+      "sanitized_output": null,
+      "duration_ms": 31,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "3f3414b5-f5fa-4feb-86ec-894312a013de",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 38,
+      "timestamp": "2026-11-18T03:42:48.477+00:00",
+      "event_type": "stage_started",
+      "stage": "respond",
+      "tool_name": null,
+      "sanitized_input": null,
+      "sanitized_output": null,
+      "duration_ms": null,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "d0b8387b-c711-4b33-9db5-b3eb2f328dce",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 39,
+      "timestamp": "2026-11-18T03:42:48.492+00:00",
+      "event_type": "stage_finished",
+      "stage": "respond",
+      "tool_name": null,
+      "sanitized_input": null,
+      "sanitized_output": null,
+      "duration_ms": 0,
+      "decision": null,
+      "reason": null,
+      "error_code": null
+    },
+    {
+      "event_id": "33c80e08-3f74-494e-8277-e212bee66c18",
+      "session_id": "8c8c66ce-8028-49f5-a60c-d3da92a1d225",
+      "run_id": "0b87dabd-6c34-4425-a333-ab6c6ba5ffee",
+      "sequence": 40,
+      "timestamp": "2026-11-18T03:42:48.520+00:00",
+      "event_type": "run_completed",
+      "stage": null,
+      "tool_name": null,
+      "sanitized_input": null,
+      "sanitized_output": null,
+      "duration_ms": 578,
+      "decision": "invitation",
+      "reason": null,
+      "error_code": null
+    }
+  ],
+  "result": {
+    "message": "네 크리스마스 초대장이 도착했어. 봉투를 열어 하루의 동선과 준비물을 확인해 봐.",
+    "conditions": {
+      "name": null,
+      "date": "2026-12-25",
+      "start": "14:00:00",
+      "end": "18:00:00",
+      "region": "종로",
+      "origin": null,
+      "companion": "혼자",
+      "mood": "조용한",
+      "activities": [
+        "문화시설",
+        "카페"
+      ],
+      "food": null,
+      "music": "재즈",
+      "budget": null,
+      "budget_basis": null,
+      "party_size": 1,
+      "walking_limit": 10,
+      "avoids": null,
+      "cold_sensitive": null,
+      "indoor": null
+    },
+    "plan": {
+      "title": "나에게 도착한 크리스마스",
+      "letter": "좋아하는 것들로 크리스마스 하루를 준비했어. 오늘은 네 속도로 걷고, 마음에 드는 순간에는 조금 더 오래 머물러도 좋아.",
+      "conditions": {
+        "name": null,
+        "date": "2026-12-25",
+        "start": "14:00:00",
+        "end": "18:00:00",
+        "region": "종로",
+        "origin": null,
+        "companion": "혼자",
+        "mood": "조용한",
+        "activities": [
+          "문화시설",
+          "카페"
+        ],
+        "food": null,
+        "music": "재즈",
+        "budget": null,
+        "budget_basis": null,
+        "party_size": 1,
+        "walking_limit": 10,
+        "avoids": null,
+        "cold_sensitive": null,
+        "indoor": null
+      },
+      "mode": "demo",
+      "stops": [
+        {
+          "id": "101",
+          "name": "겨울빛 전시관",
+          "address": "서울 종로구 (예시)",
+          "point": [
+            126.975,
+            37.578
+          ],
+          "category": "문화시설",
+          "description": "겨울 풍경을 담은 조용한 실내 전시 공간이에요.",
+          "service_note": null,
+          "source_url": "",
+          "reason": "요청한 문화시설 활동을 담았어요.",
+          "stay_minutes": 50,
+          "arrives": "14:00",
+          "leaves": "14:50",
+          "hours": "11:00~19:00",
+          "closure": "연중무휴",
+          "access": "verified",
+          "admission": 0
+        },
+        {
+          "id": "103",
+          "name": "눈꽃 다과점",
+          "address": "서울 종로구 (예시)",
+          "point": [
+            126.978,
+            37.578
+          ],
+          "category": "음식점",
+          "description": "전시관 근처에서 차와 작은 디저트로 쉬어가기 좋아요.",
+          "service_note": null,
+          "source_url": "",
+          "reason": "요청한 카페 활동을 담았어요.",
+          "stay_minutes": 40,
+          "arrives": "14:56",
+          "leaves": "15:36",
+          "hours": "11:00~19:00",
+          "closure": "연중무휴",
+          "access": "verified",
+          "admission": null
+        }
+      ],
+      "legs": [
+        {
+          "origin": "겨울빛 전시관",
+          "destination": "눈꽃 다과점",
+          "seconds": 332,
+          "distance_m": 390,
+          "lines": [
+            [
+              [
+                126.975,
+                37.578
+              ],
+              [
+                126.97649999999999,
+                37.578
+              ],
+              [
+                126.978,
+                37.578
+              ]
+            ]
+          ]
+        }
+      ],
+      "walking_seconds": 332,
+      "finishes": "15:41",
+      "buffer_minutes": 5,
+      "known_cost": 0,
+      "cost_basis": "1인 입장료",
+      "budget_remaining": null,
+      "weather": {
+        "temperature": [
+          -8.0,
+          6.0
+        ],
+        "apparent": [
+          -12.0,
+          3.0
+        ],
+        "precipitation_max": 1.2,
+        "wind_max": 19.0,
+        "years": [
+          2021,
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "period": "12월 20~26일 (시연 데이터)",
+        "missing": {},
+        "guide": "두꺼운 외투와 장갑을 준비해 보세요. 실내에서 쉬어가는 시간도 좋아요.",
+        "source_url": ""
+      },
+      "songs": [
+        {
+          "title": "Christmas Time Is Here",
+          "artist": "Vince Guaraldi Trio",
+          "reason": "느긋하게 겨울 오후를 시작하기 좋아요.",
+          "url": "https://www.youtube.com/results?search_query=Christmas+Time+Is+Here+Vince+Guaraldi+Trio"
+        },
+        {
+          "title": "The Christmas Song",
+          "artist": "Nat King Cole",
+          "reason": "따뜻한 목소리가 잠깐 쉬는 시간에 어울려요.",
+          "url": "https://www.youtube.com/results?search_query=The+Christmas+Song+Nat+King+Cole"
+        },
+        {
+          "title": "Let It Snow! Let It Snow! Let It Snow!",
+          "artist": "Ella Fitzgerald",
+          "reason": "가벼운 스윙으로 산책에 리듬을 더해요.",
+          "url": "https://www.youtube.com/results?search_query=Let+It+Snow%21+Let+It+Snow%21+Let+It+Snow%21+Ella+Fitzgerald"
+        }
+      ],
+      "checks": {
+        "종료 시각": "충족 · 제안 체류 시간과 여유 시간을 기준으로 계산했어요.",
+        "보행": "충족",
+        "이용 조건": "공개된 운영 시간 범위와 일치",
+        "비용": "일부 입장료 또는 현장 지출은 방문 전에 확인해 주세요.",
+        "추운 날 대안": "야외 이동이 부담되면 대화에서 실내 위주와 더 짧은 보행 제한을 요청할 수 있어요."
+      },
+      "exclusions": [
+        "겨울빛 전시관 → 온기 찻집 · 보행 24분 34초가 10분 제한을 넘어요."
+      ],
+      "warnings": [
+        "시연 모드 · 예시 장소, 경로, 날씨를 사용했어요.",
+        "시연 데이터로 조회했어요. 예시 장소와 경로를 실제 방문에 사용하지 마세요."
+      ],
+      "origin_label": "겨울빛 전시관에서 시작 · 첫 장소까지 이동 제외",
+      "revalidation_required": false
+    },
+    "warnings": [
+      "시연 모드 · 예시 장소, 경로, 날씨를 사용했어요.",
+      "시연 데이터로 조회했어요. 예시 장소와 경로를 실제 방문에 사용하지 마세요."
+    ],
+    "replans": 1
+  }
+}

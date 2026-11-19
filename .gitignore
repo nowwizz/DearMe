@@ -1,0 +1,10 @@
+.env*
+!.env.example
+.venv/
+__pycache__/
+*.py[cod]
+node_modules/
+dist/
+data/
+.npm-cache/
+/AI코어프로젝트_3회차_요구사항정의서.pdf
