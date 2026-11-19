@@ -62,7 +62,8 @@ def tools():
             'mapx': 127.0271, 'mapy': 37.4984}
     far = {**near, 'contentid': '2', 'title': '먼 카페', 'mapx': 127.034, 'mapy': 37.52}
     chain = {**near, 'contentid': '3', 'title': '메가 MGC 커피 강남역점'}
-    with patch('backend.tools.tour_items', return_value=[chain, near, far]):
+    cafegate = {**near, 'contentid': '4', 'title': '카페 게이트 강남역점'}
+    with patch('backend.tools.tour_items', return_value=[chain, cafegate, near, far]):
         nearby = call_tool('search_places', {'region': '강남역', 'center': (127.028, 37.498),
                            'radius_m': STATION_RADIUS_M, 'category': 39})
         assert nearby.ok and [item.content_id for item in nearby.data.candidates] == ['1']
@@ -70,7 +71,8 @@ def tools():
                  'upperAddrName': '서울', 'middleAddrName': '강남구', 'frontLon': '127.0282', 'frontLat': '37.4982'}
     with patch('backend.tools.tmap_pois', return_value=[
         {**tmap_cafe, 'id': '11', 'name': 'COMPOSE COFFEE 강남역점'},
-        {**tmap_cafe, 'id': '12', 'name': '미등록 브랜드', 'detailBizName': '프랜차이즈 카페'}, tmap_cafe
+        {**tmap_cafe, 'id': '12', 'name': '미등록 브랜드', 'detailBizName': '프랜차이즈 카페'},
+        {**tmap_cafe, 'id': '13', 'name': 'CAFE GATE 역삼점'}, tmap_cafe,
     ]):
         nearby = call_tool('search_places', {'region': '강남역', 'center': (127.028, 37.498),
                                             'radius_m': STATION_RADIUS_M, 'provider': 'tmap_cafes'})
@@ -88,6 +90,9 @@ def tools():
     for food, expected in ((None, ['2', '3']), ('감자탕', ['1', '3'])):
         order, _ = choose_candidates(candidates, details, dinner.model_copy(update={'food': food}), set())
         assert [item.content_id for item in order] == expected
+    chain_candidates = [*candidates[:2], candidates[2].model_copy(update={'name': '카페게이트 강남역점'})]
+    order, exclusions = choose_candidates(chain_candidates, details, dinner, set())
+    assert not order and any('카페게이트 강남역점' in reason for reason in exclusions)
     details['3'].description = '프랜차이즈 카페입니다.'
     order, _ = choose_candidates(candidates, details, dinner, set())
     assert not order

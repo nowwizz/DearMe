@@ -40,7 +40,7 @@ CHAIN_CAFE_PREFIXES = (
     '감성커피', '드롭탑', 'dalcomm', '달콤커피', '바나프레소', 'banapresso',
     '더리터', '하삼동커피', '텐퍼센트커피', '텐퍼센트스페셜티커피', '10percentcoffee',
     '카페봄봄', '카페051', '읍천리382', '블루샥', '블루보틀', 'bluebottle',
-    '아티제', 'artisee', '공차', 'gongcha', '설빙', 'sulbing', '카페인중독',
+    '아티제', 'artisee', '공차', 'gongcha', '설빙', 'sulbing', '카페인중독', '카페게이트', 'cafegate',
     '랑데자뷰', '커피스미스', '커피명가', '뚜레쥬르', '파리바게뜨', '파리바게트',
 )
 CHAIN_CAFE_DESCRIPTION = re.compile(r'(?:프[랜렌]차이즈|체인)\s*(?:카페|커피\s*(?:전문점|매장))|'
